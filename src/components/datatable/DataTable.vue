@@ -607,7 +607,7 @@ export default {
                         let filterValue = this.filters[columnField];
                         let dataFieldValue = ObjectUtils.resolveFieldData(data[i], columnField);
                         let filterConstraint = col.filterMatchMode === 'custom' ? col.filterFunction : FilterUtils[col.filterMatchMode];
-                        if (!filterConstraint(dataFieldValue, filterValue, this.filterLocale)) {
+                        if (!filterConstraint(dataFieldValue, filterValue, this.filterLocale, data[i])) {
                             localMatch = false;
                         }
 

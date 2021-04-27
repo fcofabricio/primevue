@@ -424,6 +424,13 @@ export default {
             if (this.dataKey) {
                 this.updateEditingRowKeys(newValue);
             }
+        },
+        filters: {
+            handler() {
+                this.d_first = 0;
+                this.$emit('update:first', this.d_first);
+            },
+            deep: true
         }
     },
     beforeMount() {
@@ -585,9 +592,6 @@ export default {
             this.d_multiSortMeta = [...this.d_multiSortMeta];
         },
         filter(data) {
-            this.d_first = 0;
-            this.$emit('update:first', this.d_first);
-
             let filteredValue = [];
 
             for(let i = 0; i < data.length; i++) {

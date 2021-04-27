@@ -1,10 +1,10 @@
 {
-    "name": "primevue",
-    "version": "2.4.2-SNAPSHOT",
+    "name": "@limeware/primevue",
+    "version": "2.4.2-alpha1",
     "homepage": "https://www.primefaces.org/primevue",
     "repository": {
       "type": "git",
-      "url": "https://github.com/primefaces/primevue.git"
+      "url": "https://github.com/fcofabricio/primevue.git"
     },
     "license": "MIT",
     "bugs": {

@@ -1837,9 +1837,10 @@ export default {
         loadingIconClass() {
             return ['p-datatable-loading-icon pi-spin', this.loadingIcon];
         },
-        allRowsSelected() {
+         allRowsSelected() {
             const val = this.processedData;
-            return (val && val.length > 0 && this.selection && this.selection.length > 0 && this.selection.length === val.length);
+            const length = this.lazy ? this.totalRecords : (val ? val.length : 0);
+            return (val && length > 0 && this.selection && this.selection.length > 0 && this.selection.length === length);
         }
     },
     components: {

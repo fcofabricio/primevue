@@ -2,8 +2,11 @@
     <div class="layout-wrapper" :class="containerClass">
         <a class="layout-news" href="https://www.primefaces.org/store" target="_blank" tabindex="-1" v-if="newsActive">
             <div class="layout-news-container">
-                <img class="layouts-news-text-image" alt="easter" src="./assets/images/topbar-easter-2020-text.png">
-                <img class="layouts-news-mockup-image" alt="easter" src="./assets/images/topbar-easter-2020-ultima.png">
+                <img class="layouts-news-mockup-image" alt="primeblocks" src="./assets/images/topbar-primeblocks-device.png">
+                <a href="https://www.primefaces.org/primeblocks-vue" target="_blank" tabindex="-1" style="text-decoration: none" class="layout-news-button">
+                    LEARN MORE
+                    <i class="pi pi-angle-right"></i>
+                </a>
                 <a href="#" class="layout-news-close" @click="hideNews">
                     <i class="pi pi-times"></i>
                 </a>
@@ -37,7 +40,7 @@ export default {
     data() {
         return {
             sidebarActive: false,
-            newsActive: false,
+            newsActive: true,
             theme: 'saga-blue'
         }
     },

@@ -1,10 +1,12 @@
 <template>
     <transition name="p-sidebar" @enter="onEnter" @leave="onLeave" appear>
         <div :class="containerClass" v-if="visible" ref="container" role="complementary" :aria-modal="modal">
-            <div class="p-sidebar-content">
-                <button class="p-sidebar-close p-link" @click="hide" :aria-label="ariaCloseLabel" v-if="showCloseIcon" type="button" v-ripple>
+            <div class="p-sidebar-header">
+                <button class="p-sidebar-close p-sidebar-icon p-link" @click="hide" :aria-label="ariaCloseLabel" v-if="showCloseIcon" type="button" v-ripple>
                     <span class="p-sidebar-close-icon pi pi-times" />
                 </button>
+            </div>
+            <div class="p-sidebar-content">
                 <slot></slot>
             </div>
         </div>
@@ -86,23 +88,19 @@ export default {
         enableModality() {
             if (!this.mask) {
                 this.mask = document.createElement('div');
-                this.mask.setAttribute('class', 'p-sidebar-mask');
+                this.mask.setAttribute('class', 'p-sidebar-mask p-component-overlay p-component-overlay-enter');
                 this.mask.style.zIndex = String(parseInt(this.$refs.container.style.zIndex, 10) - 1);
                 if (this.dismissable) {
                     this.bindMaskClickListener();
                 }
                 document.body.appendChild(this.mask);
                 DomHandler.addClass(document.body, 'p-overflow-hidden');
-
-                setTimeout(() => {
-                    DomHandler.addClass(this.mask, 'p-component-overlay');
-                }, 1);
             }
         },
         disableModality() {
             if (this.mask) {
-                DomHandler.addClass(this.mask, 'p-sidebar-mask-leave');
-                this.mask.addEventListener('transitionend', () => {
+                DomHandler.addClass(this.mask, 'p-component-overlay-leave');
+                this.mask.addEventListener('animationend', () => {
                     this.destroyModal();
                 });
             }
@@ -150,29 +148,25 @@ export default {
 .p-sidebar {
     position: fixed;
     transition: transform .3s;
+    display: flex;
+    flex-direction: column;
 }
 
 .p-sidebar-content {
     position: relative;
+    overflow-y: auto;
 }
 
-.p-sidebar-close {
-    position: absolute;
-    top: 0;
-    right: 0;
+.p-sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.p-sidebar-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-}
-
-.p-sidebar-mask {
-    background-color: transparent;
-    transition-property: background-color;
-}
-
-.p-sidebar-mask.p-sidebar-mask-leave.p-component-overlay {
-    background-color: transparent;
 }
 
 .p-sidebar-left {

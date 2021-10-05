@@ -65,7 +65,7 @@ function onClick(event) {
 }
 
 function show(el) {
-    if (!el.$_ptooltipValue) {
+    if (el.$_ptooltipDisabled) {
         return;
     }
 
@@ -75,7 +75,9 @@ function show(el) {
     tooltipElement.style.zIndex = ++DomHandler.zindex;
 
     window.addEventListener('resize', function onWindowResize() {
-        hide(el);
+        if (!DomHandler.isAndroid()) {
+            hide(el);
+        }
         this.removeEventListener('resize', onWindowResize);
     });
 
@@ -236,10 +238,34 @@ function isOutOfBounds(el) {
     return (targetLeft + width > viewport.width) || (targetLeft < 0) || (targetTop < 0) || (targetTop + height > viewport.height);
 }
 
+function getModifiers(options) {
+    // modifiers
+    if (options.modifiers && Object.keys(options.modifiers).length) {
+        return options.modifiers;
+    }
+
+    // arg
+    if (options.arg && typeof options.arg === 'object') {
+        return Object.entries(options.arg).reduce((acc, [key, val]) => {
+            if (key === 'event' || key === 'position') acc[val] = true;
+            return acc;
+        }, {});
+    }
+
+    return {};
+}
+
 const Tooltip = {
     bind(el, options) {
-        el.$_ptooltipModifiers = options.modifiers;
-        el.$_ptooltipValue = options.value;
+        el.$_ptooltipModifiers = getModifiers(options);
+        if (typeof options.value === 'string') {
+            el.$_ptooltipValue = options.value;
+            el.$_ptooltipDisabled = false;
+        }
+        else {
+            el.$_ptooltipValue = options.value.value;
+            el.$_ptooltipDisabled = options.value.disabled || false;
+        }
         bindEvents(el);
     },
     unbind(el) {
@@ -252,8 +278,16 @@ const Tooltip = {
         }
     },
     update(el, options) {
-        el.$_ptooltipModifiers = options.modifiers;
-        el.$_ptooltipValue = options.value;
+        el.$_ptooltipModifiers = getModifiers(options);
+
+        if (typeof options.value === 'string') {
+            el.$_ptooltipValue = options.value;
+            el.$_ptooltipDisabled = false;
+        }
+        else {
+            el.$_ptooltipValue = options.value.value;
+            el.$_ptooltipDisabled = options.value.disabled;
+        }
     }
 };
 

@@ -12,7 +12,9 @@
         <ul ref="topbarMenu" class="topbar-menu">
             <li><router-link to="/setup">Get Started</router-link></li>
             <li class="topbar-submenu">
-                <a tabindex="0" @click="toggleMenu($event, 0)">Themes</a>
+                <a tabindex="0" @click="toggleMenu($event, 0)">
+                    <span v-badge.danger>Themes</span>
+                </a>
                 <transition name="p-connected-overlay" @enter="onMenuEnter">
                     <ul v-show="activeMenuIndex === 0">
                         <li class="topbar-submenu-header">THEMING</li>
@@ -37,6 +39,9 @@
                         <li><a @click="changeTheme($event, 'mdc-light-deeppurple')"><img src="demo/images/themes/md-light-deeppurple.svg" alt="Deep Purple Light" /><span>Deep Purple Light</span></a></li>
                         <li><a @click="changeTheme($event, 'mdc-dark-indigo', true)"><img src="demo/images/themes/md-dark-indigo.svg" alt="Indigo Dark" /><span>Indigo Dark</span></a></li>
                         <li><a @click="changeTheme($event, 'mdc-dark-deeppurple', true)"><img src="demo/images/themes/md-dark-deeppurple.svg" alt="Deep Purple Dark" /><span>Deep Purple Dark</span></a></li>
+
+                        <li class="topbar-submenu-header">TAILWIND</li>
+                        <li><a @click="changeTheme($event, 'tailwind-light')"><img src="demo/images/themes/tailwind-light.png" alt="Tailwind Light" /><span>Tailwind Light</span></a></li>
 
                         <li class="topbar-submenu-header">FLUENT UI</li>
                         <li><a @click="changeTheme($event, 'fluent-light')"><img src="demo/images/themes/fluent-light.png" alt="Fluent Light" /><span>Fluent Light</span></a></li>
@@ -79,8 +84,11 @@
                 <transition name="p-connected-overlay" @enter="onMenuEnter">
                     <ul v-show="activeMenuIndex === 1">
                         <li class="topbar-submenu-header">FREE ADMIN TEMPLATE</li>
-                        <li><a href="https://www.primefaces.org/sigma-vue"><img src="./assets/images/layouts/themeswitcher-sigma.png" alt="Sigma" /><span>Sigma</span></a></li>
+                        <li><a href="https://www.primefaces.org/sakai-vue"><img src="./assets/images/layouts/themeswitcher-sakai.svg" alt="Sakai" /><span>Sakai</span></a></li>
                         <li class="topbar-submenu-header">PREMIUM ADMIN TEMPLATES</li>
+                        <li><a href="https://www.primefaces.org/layouts/atlantis-vue"><img src="./assets/images/layouts/themeswitcher-atlantis.svg" alt="Atlantis" /><span>Atlantis</span></a></li>
+                        <li><a href="https://www.primefaces.org/layouts/freya-vue"><img src="./assets/images/layouts/themeswitcher-freya.png" alt="Freya" /><span>Freya</span></a></li>
+                        <li><a href="https://www.primefaces.org/layouts/diamond-vue"><img src="./assets/images/layouts/themeswitcher-diamond.png" alt="Diamond" /><span>Diamond</span></a></li>
                         <li><a href="https://www.primefaces.org/layouts/sapphire-vue"><img src="./assets/images/layouts/themeswitcher-sapphire.png" alt="Sapphire" /><span>Sapphire</span><span class="theme-badge material">material</span></a></li>
                         <li><a href="https://www.primefaces.org/layouts/serenity-vue"><img src="./assets/images/layouts/themeswitcher-serenity.png" alt="Serenity" /><span>Serenity</span><span class="theme-badge material">material</span></a></li>
                         <li><a href="https://www.primefaces.org/layouts/ultima-vue"><img src="./assets/images/layouts/themeswitcher-ultima.png" alt="Ultima" /><span>Ultima</span><span class="theme-badge material">material</span></a></li>
@@ -165,8 +173,11 @@ export default {
                 'fluent-light': 'fluent-light.png',
                 'soho-light': 'soho-light.png',
                 'soho-dark': 'soho-dark.png',
+                'viva-light': 'viva-light.svg',
+                'viva-dark': 'viva-dark.svg',
                 'mira': 'mira.jpg',
-                'nano': 'nano.jpg'
+                'nano': 'nano.jpg',
+                'tailwind-light': 'tailwind-light.png',
             }
         }
     },

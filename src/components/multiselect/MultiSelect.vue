@@ -21,12 +21,14 @@
             </div>
         </div>
         <div class="p-multiselect-trigger">
-            <span class="p-multiselect-trigger-icon pi pi-chevron-down"></span>
+            <slot name="indicator">
+                 <span class="p-multiselect-trigger-icon pi pi-chevron-down"></span>
+            </slot>
         </div>
         <transition name="p-connected-overlay" @enter="onOverlayEnter" @leave="onOverlayLeave">
             <div ref="overlay" class="p-multiselect-panel p-component" v-if="overlayVisible">
-                <div class="p-multiselect-header">
-                    <div class="p-checkbox p-component" @click="onToggleAll" role="checkbox" :aria-checked="allSelected">
+                <div class="p-multiselect-header" v-if="(showToggleAll && selectionLimit == null) || filter">
+                    <div class="p-checkbox p-component" v-if="showToggleAll && selectionLimit == null" @click="onToggleAll" role="checkbox" :aria-checked="allSelected">
                         <div class="p-hidden-accessible">
                             <input type="checkbox" readonly @focus="onHeaderCheckboxFocus" @blur="onHeaderCheckboxBlur">
                         </div>
@@ -35,7 +37,7 @@
                         </div>
                     </div>
                     <div v-if="filter" class="p-multiselect-filter-container">
-                        <input type="text" v-model="filterValue" class="p-multiselect-filter p-inputtext p-component" :placeholder="filterPlaceholder" @input="onFilterChange">
+                        <input type="text" ref="filterInput" v-model="filterValue" class="p-multiselect-filter p-inputtext p-component" :placeholder="filterPlaceholder" @input="onFilterChange">
                         <span class="p-multiselect-filter-icon pi pi-search"></span>
                     </div>
                     <button class="p-multiselect-close p-link" @click="onCloseClick" type="button" v-ripple>
@@ -100,6 +102,14 @@ export default {
         display: {
             type: String,
             default: 'comma'
+        },
+        selectionLimit: {
+            type: Number,
+            default: null
+        },
+        showToggleAll: {
+            type: Boolean,
+            default: true
         }
     },
     data() {
@@ -113,6 +123,9 @@ export default {
     outsideClickListener: null,
     resizeListener: null,
     scrollHandler: null,
+    updated() {
+        this.onFilterUpdated();
+    },
     beforeDestroy() {
         this.restoreAppend();
         this.unbindOutsideClickListener();
@@ -134,6 +147,9 @@ export default {
             return this.dataKey ? ObjectUtils.resolveFieldData(option, this.dataKey) : this.getOptionLabel(option);
         },
         isOptionDisabled(option) {
+            if (this.maxSelectionLimitReached && !this.isSelected(option)) {
+                return true;
+            }
             return this.optionDisabled ? ObjectUtils.resolveFieldData(option, this.optionDisabled) : false;
         },
         isSelected(option) {
@@ -293,6 +309,10 @@ export default {
             this.bindScrollListener();
             this.bindResizeListener();
             this.$emit('show');
+
+            if (this.filter) {
+                this.$refs.filterInput.focus();
+            }
         },
         onOverlayLeave() {
             this.unbindOutsideClickListener();
@@ -344,7 +364,7 @@ export default {
         bindResizeListener() {
             if (!this.resizeListener) {
                 this.resizeListener = () => {
-                    if (this.overlayVisible) {
+                    if (this.overlayVisible && !DomHandler.isAndroid()) {
                         this.hide();
                     }
                 };
@@ -400,6 +420,8 @@ export default {
         },
         onFilterChange(event) {
             this.$emit('filter', {originalEvent: event, value: event.target.value});
+        },
+        onFilterUpdated() {
             if (this.overlayVisible) {
                 this.alignOverlay();
             }
@@ -479,6 +501,9 @@ export default {
         },
         equalityKey() {
             return this.optionValue ? null : this.dataKey;
+        },
+        maxSelectionLimitReached() {
+            return this.selectionLimit && (this.value && this.value.length === this.selectionLimit);
         }
     },
     directives: {
@@ -588,6 +613,7 @@ export default {
     flex-shrink: 0;
     overflow: hidden;
     position: relative;
+    margin-left: auto;
 }
 
 .p-fluid .p-multiselect {

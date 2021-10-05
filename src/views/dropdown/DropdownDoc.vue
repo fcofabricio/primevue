@@ -263,7 +263,7 @@ data() {
                                 <td>Shows the overlay.</td>
                             </tr>
                             <tr>
-                                <td>Hide</td>
+                                <td>hide</td>
                                 <td>-</td>
                                 <td>Hides the overlay.</td>
                             </tr>
@@ -290,6 +290,10 @@ data() {
                                 <td>value</td>
                                 <td>value: Value of the component <br />
                                     placeholder: Placeholder prop value</td>
+                            </tr>
+                            <tr>
+                                <td>indicator</td>
+                                <td>-</td>
                             </tr>
                         </tbody>
                     </table>

@@ -185,12 +185,6 @@ export default {
 							<td>Orientation of tab headers.</td>
 						</tr>
 						<tr>
-							<td>active</td>
-							<td>boolean</td>
-							<td>null</td>
-							<td>Visibility of the content.</td>
-						</tr>
-						<tr>
 							<td>disabled</td>
 							<td>boolean</td>
 							<td>false</td>
@@ -243,7 +237,7 @@ export default {
                             <tr>
                                 <td>tab-open</td>
                                 <td>event.originalEvent: Browser event  <br/>
-                                    event.tab: Opened tab
+                                    event.tab: opened tab
                                 </td>
                                 <td>Callback to invoke when a tab gets expanded.</td>
                             </tr>

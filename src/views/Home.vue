@@ -122,6 +122,31 @@
 
             <div class="p-grid">
                 <div class="p-col-12 p-md-3">
+                    <a href="https://www.primefaces.org/sakai-vue">
+                        <img alt="Sakai" src="../assets/images/layouts/sakai-vue.jpg">
+                    </a>
+                </div>
+                <div class="p-col-12 p-md-3">
+                    <a href="https://www.primefaces.org/layouts/atlantis-vue">
+                        <img alt="Atlantis" src="../assets/images/layouts/atlantis-vue.jpg">
+                    </a>
+                </div>
+                <div class="p-col-12 p-md-3">
+                    <a href="https://www.primefaces.org/layouts/freya-vue">
+                        <img alt="Freya" src="../assets/images/layouts/freya-vue.png">
+                    </a>
+                </div>
+                <div class="p-col-12 p-md-3">
+                    <a href="https://www.primefaces.org/layouts/ultima-vue">
+                        <img alt="Ultima" src="../assets/images/layouts/ultima-vue.jpg">
+                    </a>
+                </div>
+                <div class="p-col-12 p-md-3">
+                    <a href="https://www.primefaces.org/layouts/diamond-vue">
+                        <img alt="Diamond" src="../assets/images/layouts/diamond-vue.jpg">
+                    </a>
+                </div>
+                <div class="p-col-12 p-md-3">
                     <a href="https://www.primefaces.org/layouts/sapphire-vue">
                         <img alt="Sapphire" src="../assets/images/layouts/sapphire-vue.jpg">
                     </a>
@@ -152,28 +177,11 @@
                     </a>
                 </div>
                 <div class="p-col-12 p-md-3">
-                    <a href="https://www.primefaces.org/layouts/ultima-vue">
-                        <img alt="Ultima" src="../assets/images/layouts/ultima-vue.jpg">
-                    </a>
-                </div>
-                <div class="p-col-12 p-md-3">
                     <a href="https://www.primefaces.org/layouts/prestige-vue">
                         <img alt="Prestige" src="../assets/images/layouts/prestige-vue.jpg">
                     </a>
                 </div>
                 <div class="p-col-12 p-md-3"></div>
-            </div>
-        </div>
-        <div class="templates">
-            <h4>Free Application Template for PrimeVue</h4>
-            <p>Sigma is a free and open source admin template based on <a href="https://cli.vuejs.org">Vue-CLI</a>.</p>
-
-            <div class="p-grid">
-                <div class="p-col-12">
-                    <a href="https://www.primefaces.org/sigma-vue">
-                        <img alt="Sigma" src="../assets/images/layouts/sigma.jpg" />
-                    </a>
-                </div>
             </div>
         </div>
 
@@ -190,6 +198,33 @@
                 </div>
             </div>
         </div>
+
+        <div class="primeblocks">
+            <div class="p-grid">
+                <div class="p-col-12 p-md-6">
+                    <h4 class="pro-title">Vue UI Blocks Powered by PrimeVue</h4>
+                    <p>150+ ready to use UI blocks to build spectacular applications in no time.</p>
+                    <a class="action-button" href="https://www.primefaces.org/primeblocks-vue">LEARN MORE</a>
+                </div>
+                <div class="p-col-12 p-md-6 p-text-center">
+                    <img alt="primeblocks-vue" src="../assets/images/primeblocks.png" class="section-image">
+                </div>
+            </div>
+        </div>
+
+        <div class="primeflex">
+            <div class="p-grid">
+                <div class="p-col-12 p-md-6">
+                    <h3 class="pro-title">PrimeFlex: Perfect CSS Utility Companion</h3>
+                    <p>PrimeFlex is a lightweight responsive CSS utility library to accompany Prime UI libraries and static webpages as well.</p>
+                    <a class="action-button" href="https://www.primefaces.org/primeflex">LEARN MORE</a>
+                </div>
+                <div class="p-col-12 p-md-6 p-text-center">
+                    <img alt="primeflex" src="../assets/images/primeflex.png" class="section-image">
+                </div>
+            </div>
+        </div>
+
         <div class="prosupport">
             <div class="p-grid">
                 <div class="p-col-12 p-md-6">

@@ -1,7 +1,7 @@
 <template>
     <div class="p-fileupload p-fileupload-advanced p-component" v-if="isAdvanced">
         <div class="p-fileupload-buttonbar">
-            <span :class="advancedChooseButtonClass" @click="choose" @keydown.enter="choose" @focus="onFocus" @blur="onBlur" v-ripple tabindex="0">
+            <span :class="advancedChooseButtonClass" :style="buttonStyle" @click="choose" @keydown.enter="choose" @focus="onFocus" @blur="onBlur" v-ripple tabindex="0">
                 <input ref="fileInput" type="file" @change="onFileSelect" :multiple="multiple" :accept="accept" :disabled="chooseDisabled" />
                 <span class="p-button-icon p-button-icon-left pi pi-fw pi-plus"></span>
                 <span class="p-button-label">{{chooseButtonLabel}}</span>
@@ -11,13 +11,13 @@
         </div>
         <div ref="content" class="p-fileupload-content" @dragenter="onDragEnter" @dragover="onDragOver" @dragleave="onDragLeave" @drop="onDrop">
             <FileUploadProgressBar :value="progress" v-if="hasFiles" />
-            <FileUploadMessage v-for="msg of messages" severity="error" :key="msg">{{msg}}</FileUploadMessage>
+            <FileUploadMessage v-for="msg of messages" severity="error" :key="msg" @close="onMessageClose">{{msg}}</FileUploadMessage>
             <div class="p-fileupload-files" v-if="hasFiles">
                 <div class="p-fileupload-row" v-for="(file, index) of files" :key="file.name + file.type + file.size">
                     <div>
                         <img v-if="isImage(file)" role="presentation" :alt="file.name" :src="file.objectURL" :width="previewWidth" />
                     </div>
-                    <div>{{file.name}}</div>
+                    <div class="p-fileupload-filename">{{file.name}}</div>
                     <div>{{formatSize(file.size)}}</div>
                     <div>
                         <FileUploadButton type="button" icon="pi pi-times" @click="remove(index)" />
@@ -30,8 +30,8 @@
         </div>
     </div>
     <div class="p-fileupload p-fileupload-basic p-component" v-else-if="isBasic">
-        <FileUploadMessage v-for="msg of messages" severity="error" :key="msg">{{msg}}</FileUploadMessage>
-        <span :class="basicChooseButtonClass" @mouseup="onBasicUploaderClick"  @keydown.enter="choose" @focus="onFocus" @blur="onBlur" v-ripple tabindex="0" >
+        <FileUploadMessage v-for="msg of messages" severity="error" :key="msg" @close="onMessageClose">{{msg}}</FileUploadMessage>
+        <span :class="basicChooseButtonClass" :style="buttonStyle" @mouseup="onBasicUploaderClick"  @keydown.enter="choose" @focus="onFocus" @blur="onBlur" v-ripple tabindex="0" >
             <span :class="basicChooseButtonIconClass"></span>
             <span class="p-button-label">{{basicChooseButtonLabel}}</span>
             <input ref="fileInput" type="file" :accept="accept" :disabled="disabled" @change="onFileSelect" @focus="onFocus" @blur="onBlur" v-if="!hasFiles" />
@@ -84,6 +84,10 @@ export default {
             type: String,
             default: '{0}: Invalid file size, file size should be smaller than {1}.'
         },
+        invalidFileTypeMessage: {
+            type: String,
+            default: '{0}: Invalid file type, allowed file types: {1}.'
+        },
         fileLimit: {
             type: Number,
             default: null
@@ -123,7 +127,9 @@ export default {
         showCancelButton: {
             type: Boolean,
             default: true
-        }
+        },
+        buttonStyle: null,
+        buttonClass: null
     },
     duplicateIEEvent: false,
     data() {
@@ -274,6 +280,11 @@ export default {
             return !!window['MSInputMethodContext'] && !!document['documentMode'];
         },
         validate(file) {
+            if (this.accept && !this.isFileTypeValid(file)) {
+                this.messages.push(this.invalidFileTypeMessage.replace('{0}', file.name).replace('{1}', this.accept))
+                return false;
+            }
+
             if (this.maxFileSize && file.size > this.maxFileSize) {
                 this.messages.push(this.invalidFileSizeMessage.replace('{0}', file.name).replace('{1}', this.formatSize(this.maxFileSize)));
                 return false;
@@ -281,13 +292,36 @@ export default {
 
             return true;
         },
+        isFileTypeValid(file) {
+            let acceptableTypes = this.accept.split(',').map(type => type.trim());
+            for(let type of acceptableTypes) {
+                let acceptable = this.isWildcard(type) ? this.getTypeClass(file.type) === this.getTypeClass(type)
+                    : file.type == type || this.getFileExtension(file).toLowerCase() === type.toLowerCase();
+                if (acceptable) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        getTypeClass(fileType) {
+            return fileType.substring(0, fileType.indexOf('/'));
+        },
+        isWildcard(fileType){
+            return fileType.indexOf('*') !== -1;
+        },
+        getFileExtension(file) {
+            return '.' + file.name.split('.').pop();
+        },
+        isImage(file) {
+            return /^image\//.test(file.type);
+        },
         onDragEnter(event) {
             if (!this.disabled) {
                 event.stopPropagation();
                 event.preventDefault();
             }
         },
-        onDragOver() {
+        onDragOver(event) {
             if (!this.disabled) {
                 DomHandler.addClass(this.$refs.content, 'p-fileupload-highlight');
                 event.stopPropagation();
@@ -299,7 +333,7 @@ export default {
                 DomHandler.removeClass(this.$refs.content, 'p-fileupload-highlight');
             }
         },
-        onDrop() {
+        onDrop(event) {
             if (!this.disabled) {
                 DomHandler.removeClass(this.$refs.content, 'p-fileupload-highlight');
                 event.stopPropagation();
@@ -326,9 +360,6 @@ export default {
             if(this.files.length <= this.fileLimit) {
                 this.messages = [];
             }
-        },
-        isImage(file) {
-            return /^image\//.test(file.type);
         },
         clearInputElement() {
             this.$refs.fileInput.value = '';
@@ -361,6 +392,9 @@ export default {
             if (this.isFileLimitExceeded()) {
                 this.messages.push(this.invalidFileLimitMessage.replace('{0}', this.fileLimit.toString()));
             }
+        },
+        onMessageClose() {
+            this.messages = null;
         }
     },
     computed: {
@@ -371,14 +405,14 @@ export default {
             return this.mode === 'basic';
         },
         advancedChooseButtonClass() {
-            return ['p-button p-component p-fileupload-choose', {
+            return ['p-button p-component p-fileupload-choose', this.buttonClass, {
                     'p-disabled': this.disabled,
                     'p-focus': this.focused
                 }
             ];
         },
         basicChooseButtonClass() {
-            return ['p-button p-component p-fileupload-choose', {
+            return ['p-button p-component p-fileupload-choose', this.buttonClass, {
                 'p-fileupload-choose-selected': this.hasFiles,
                 'p-disabled': this.disabled,
                 'p-focus': this.focused
@@ -463,6 +497,10 @@ export default {
 
 .p-fileupload-choose.p-fileupload-choose-selected input[type=file] {
     display: none;
+}
+
+.p-fileupload-filename {
+    word-break: break-all;
 }
 
 .p-fluid .p-fileupload .p-button {

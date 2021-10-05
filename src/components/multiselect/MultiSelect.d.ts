@@ -19,6 +19,8 @@ declare class MultiSelect extends Vue {
     appendTo?: string;
     emptyFilterMessage?: string;
     display?: string;
+    selectionLimit?: number;
+    showToggleAll?: boolean;
     $emit(eventName: 'input', value: any): this;
     $emit(eventName: 'change', e: {originalEvent: Event, value: any}): this;
     $emit(eventName: 'before-show'): this;
@@ -29,6 +31,7 @@ declare class MultiSelect extends Vue {
     $slots: {
         value: VNode[];
         option: VNode[];
+        indicator: VNode[];
     }
 }
 

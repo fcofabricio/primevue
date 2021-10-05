@@ -3,7 +3,7 @@
         <template v-if="!empty">
             <template v-for="(rowData, index) of value">
                 <tr class="p-rowgroup-header" v-if="templates['groupheader'] && rowGroupMode === 'subheader' && shouldRenderRowGroupHeader(value, rowData, index)" :key="getRowKey(rowData, index) + '_subheader'">
-                    <td :colspan="columns.length - 1">
+                    <td :colspan="columnsLength - 1">
                         <button class="p-row-toggler p-link" @click="onRowGroupToggle($event, rowData)" v-if="expandableRowGroups" type="button">
                             <span :class="rowGroupTogglerIcon(rowData)"></span>
                         </button>
@@ -12,7 +12,8 @@
                 </tr>
                 <tr :class="getRowClass(rowData)" :key="getRowKey(rowData, index)"
                     v-if="expandableRowGroups ? isRowGroupExpanded(rowData): true"
-                    @click="onRowClick($event, rowData, index)" @contextmenu="onRowRightClick($event, rowData, index)" @touchend="onRowTouchEnd($event)" @keydown="onRowKeyDown($event, rowData, index)" :tabindex="selectionMode || contextMenu ? '0' : null"
+                    @click="onRowClick($event, rowData, index)" @dblclick="onRowDblClick($event, rowData, index)" @contextmenu="onRowRightClick($event, rowData, index)" @touchend="onRowTouchEnd($event)"
+                    @keydown="onRowKeyDown($event, rowData, index)" :tabindex="selectionMode || contextMenu ? '0' : null"
                     @mousedown="onRowMouseDown($event)" @dragstart="onRowDragStart($event, index)" @dragover="onRowDragOver($event,index)" @dragleave="onRowDragLeave($event)" @dragend="onRowDragEnd($event)" @drop="onRowDrop($event)">
                     <template v-for="(col,i) of columns">
                         <DTBodyCell v-if="shouldRenderBodyCell(value, col, index)" :key="col.columnKey||col.field||i" :rowData="rowData" :column="col" :index="index" :selected="isSelected(rowData)"
@@ -25,7 +26,7 @@
                     </template>
                 </tr>
                 <tr class="p-datatable-row-expansion" v-if="templates['expansion'] && expandedRows && isRowExpanded(rowData)" :key="getRowKey(rowData, index) + '_expansion'">
-                    <td :colspan="columns.length">
+                    <td :colspan="columnsLength">
                         <DTRowExpansionTemplate :template="templates['expansion']" :data="rowData" :index="index" />
                     </td>
                 </tr>
@@ -35,7 +36,7 @@
             </template>
         </template>
         <tr v-else class="p-datatable-emptymessage">
-            <td :colspan="columns.length">
+            <td :colspan="columnsLength">
                 <DTSlotTemplate :template="templates.empty" v-if="templates.empty && !loading"/>
                 <DTSlotTemplate :template="templates.loading" v-if="templates.loading && loading"/>
             </td>
@@ -390,6 +391,9 @@ export default {
         onRowClick(event, rowData, rowIndex) {
             this.$emit('row-click', {originalEvent: event, data: rowData, index: rowIndex});
         },
+        onRowDblClick(event, rowData, rowIndex) {
+            this.$emit('row-dblclick', {originalEvent: event, data: rowData, index: rowIndex});
+        },
         onRowRightClick(event, rowData, rowIndex) {
             this.$emit('row-rightclick', {originalEvent: event, data: rowData, index: rowIndex});
         },
@@ -443,6 +447,11 @@ export default {
         },
         onRowEditCancel(event) {
             this.$emit('row-edit-cancel', event);
+        }
+    },
+    computed: {
+        columnsLength() {
+            return this.columns ? this.columns.length : 0;
         }
     },
     components: {

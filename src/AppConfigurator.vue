@@ -109,6 +109,16 @@
                         </div>
                     </div>
 
+                    <h5>Tailwind</h5>
+                    <div class="p-grid free-themes">
+                        <div class="p-col-3">
+                            <button class="p-link" type="button" @click="changeTheme($event, 'tailwind-light')">
+                                <img src="demo/images/themes/tailwind-light.png" alt="Tailwind Light"/>
+                            </button>
+                            <span>Tailwind Light</span>
+                        </div>
+                    </div>
+
                     <h5>Fluent UI</h5>
                     <div class="p-grid free-themes">
                          <div class="p-col-3">
@@ -211,6 +221,18 @@
                             <span>Soho Dark</span>
                         </div>
                         <div class="p-col-3">
+                            <button class="p-link" type="button" @click="changeTheme($event, 'viva-light')">
+                                <img src="demo/images/themes/viva-light.svg" alt="Viva Light" />
+                            </button>
+                            <span>Viva Light</span>
+                        </div>
+                        <div class="p-col-3">
+                            <button class="p-link" type="button" @click="changeTheme($event, 'viva-dark', true)">
+                                <img src="demo/images/themes/viva-dark.svg" alt="Viva Dark" />
+                            </button>
+                            <span>Viva Dark</span>
+                        </div>
+                        <div class="p-col-3">
                             <button class="p-link" type="button" @click="changeTheme($event, 'mira')">
                                 <img src="demo/images/themes/mira.jpg" alt="Mira" />
                             </button>
@@ -285,6 +307,16 @@
                     <h4>Premium Vue-CLI Templates</h4>
                     <p>Beautifully crafted premium <a href="https://cli.vuejs.org">Vue CLI</a> application templates by the PrimeTek design team.</p>
                     <div class="p-grid premium-themes">
+                        <div class="p-col-12 p-md-6">
+                            <a href="https://www.primefaces.org/sakai-vue">
+                                <img alt="Sakai" src="./assets/images/layouts/sakai-vue.jpg">
+                            </a>
+                        </div>
+                        <div class="p-col-12 p-md-6">
+                            <a href="https://www.primefaces.org/layouts/atlantis-vue">
+                                <img alt="Atlantis" src="./assets/images/layouts/atlantis-vue.jpg">
+                            </a>
+                        </div>
                         <div class="p-col-12 p-md-6">
                             <a href="https://www.primefaces.org/layouts/ultima-vue">
                                 <img alt="Ultima" src="./assets/images/layouts/ultima-vue.jpg">

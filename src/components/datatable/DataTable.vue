@@ -28,7 +28,7 @@
                     :rowGroupMode="rowGroupMode" :groupRowsBy="groupRowsBy" :expandableRowGroups="expandableRowGroups" :rowClass="rowClass" :editMode="editMode" :compareSelectionBy="compareSelectionBy"
                     :expandedRowIcon="expandedRowIcon" :collapsedRowIcon="collapsedRowIcon" :expandedRows="expandedRows" :expandedRowKeys="d_expandedRowKeys" :expandedRowGroups="expandedRowGroups"
                     :editingRows="editingRows" :editingRowKeys="d_editingRowKeys" :templates="$scopedSlots" :loading="loading"
-                    @rowgroup-toggle="toggleRowGroup" @row-click="onRowClick($event)" @row-rightclick="onRowRightClick($event)" @row-touchend="onRowTouchEnd" @row-keydown="onRowKeyDown"
+                    @rowgroup-toggle="toggleRowGroup" @row-click="onRowClick($event)" @row-dblclick="onRowDblClick($event)" @row-rightclick="onRowRightClick($event)" @row-touchend="onRowTouchEnd" @row-keydown="onRowKeyDown"
                     @row-mousedown="onRowMouseDown" @row-dragstart="onRowDragStart($event)" @row-dragover="onRowDragOver($event)" @row-dragleave="onRowDragLeave($event)" @row-dragend="onRowDragEnd($event)" @row-drop="onRowDrop($event)"
                     @row-toggle="toggleRow($event)" @radio-change="toggleRowWithRadio($event)" @checkbox-change="toggleRowWithCheckbox($event)"
                     @cell-edit-init="onCellEditInit($event)" @cell-edit-complete="onCellEditComplete($event)" @cell-edit-cancel="onCellEditCancel($event)"
@@ -450,6 +450,10 @@ export default {
             }
             this.d_columnOrder = columnOrder;
         }
+
+        if (this.resizableColumns && !this.columnWidthsRestored) {
+            this.restoreColumnWidths();
+        }
     },
     beforeDestroy() {
         this.unbindColumnResizeEvents();
@@ -651,7 +655,7 @@ export default {
 
             if (this.selectionMode) {
                 const rowData = e.data;
-                const rowIndex = e.index;
+                const rowIndex = e.index + this.d_first;
 
                 if (this.isMultipleSelectionMode() && event.shiftKey && this.anchorRowIndex != null) {
                     DomHandler.clearSelection();
@@ -721,6 +725,13 @@ export default {
             }
 
             this.rowTouched = false;
+        },
+        onRowDblClick(e) {
+            const event = e.originalEvent;
+            if (DomHandler.isClickable(event.target)) {
+                return;
+            }
+            this.$emit('row-dblclick', e);
         },
         onRowRightClick(event) {
             DomHandler.clearSelection();
@@ -930,11 +941,13 @@ export default {
             }
 
             const value = this.processedData;
-            let _selection = [];
+            let _selection = [...this.selection];
             for(let i = rangeStart; i <= rangeEnd; i++) {
                 let rangeRowData = value[i];
-                _selection.push(rangeRowData);
-                this.$emit('row-select', {originalEvent: event, data: rangeRowData, type: 'row'});
+                if (!_selection.includes(rangeRowData)) {
+                    _selection.push(rangeRowData);
+                    this.$emit('row-select', {originalEvent: event, data: rangeRowData, type: 'row'});
+                }
             }
 
             this.$emit('update:selection', _selection);

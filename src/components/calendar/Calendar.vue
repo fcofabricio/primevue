@@ -351,6 +351,11 @@ export default {
     watch: {
         value() {
             this.updateCurrentMetaData();
+        },
+        months() {
+            if (this.$refs.overlay) {
+                setTimeout(this.updateFocus, 0);
+            }
         }
     },
     methods: {
@@ -1262,7 +1267,7 @@ export default {
             if (!this.mask) {
                 this.mask = document.createElement('div');
                 this.mask.style.zIndex = String(parseInt(this.$refs.overlay.style.zIndex, 10) - 1);
-                DomHandler.addMultipleClasses(this.mask, 'p-datepicker-mask p-datepicker-mask-scrollblocker');
+                DomHandler.addMultipleClasses(this.mask, 'p-datepicker-mask p-datepicker-mask-scrollblocker p-component-overlay p-component-overlay-enter');
 
                 this.maskClickListener = () => {
                     this.overlayVisible = false;
@@ -1271,18 +1276,14 @@ export default {
 
                 document.body.appendChild(this.mask);
                 DomHandler.addClass(document.body, 'p-overflow-hidden');
-
-                setTimeout(() => {
-                    DomHandler.addClass(this.mask, 'p-component-overlay');
-                }, 1);
             }
         },
         disableModality() {
             if (this.mask) {
                 this.overlayVisible = false;
 
-                DomHandler.addClass(this.mask, 'p-datepicker-mask-leave');
-                this.mask.addEventListener('transitionend', () => {
+                DomHandler.addClass(this.mask, 'p-component-overlay-leave');
+                this.mask.addEventListener('animationend', () => {
                     this.destroyMask();
                 });
             }
@@ -2016,7 +2017,7 @@ export default {
         },
         panelStyleClass() {
             return [
-                'p-datepicker p-component',
+                'p-datepicker p-component', this.panelClass,
                 {
                     'p-datepicker-inline': this.inline,
                     'p-disabled': this.$attrs.disabled,
@@ -2318,12 +2319,4 @@ export default {
     transform: translate(-50%, -50%);
 }
 
-.p-datepicker-mask {
-    background-color: transparent;
-    transition-property: background-color;
-}
-
-.p-datepicker-mask.p-datepicker-mask-leave.p-component-overlay {
-    background-color: transparent;
-}
 </style>
